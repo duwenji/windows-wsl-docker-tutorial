@@ -14,6 +14,23 @@
 
 06章で作成したWeb + PostgreSQL構成に、Redisキャッシュサービスを追加した**3サービス構成**を、WSL2上でVS Code Dev Containersを使って開発します。
 
+目指す全体構成は以下の通りです。
+
+```mermaid
+flowchart TB
+    Browser["Windowsブラウザ<br/>localhost:3000"] -->|"forwardPorts"| Web
+    subgraph DevEnv["VS Code Dev Containers（Remote-WSL経由）"]
+        Web["web（Node.js）"]
+    end
+    subgraph Net["Composeネットワーク（ユーザー定義bridge）"]
+        Web
+        Cache["cache（Redis）"]
+        Db["db（PostgreSQL）<br/>+ named volume"]
+    end
+    Web -->|"ホスト名: db"| Db
+    Web -->|"ホスト名: cache"| Cache
+```
+
 ## 満たすべき要件
 
 - [ ] Docker Composeで`web`・`db`・`cache`の3サービスが起動すること

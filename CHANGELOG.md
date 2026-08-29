@@ -8,6 +8,13 @@
 - `03-docker-core-operations/03-volume-basics.md` に`docker volume inspect`の`Mountpoint`フィールドの説明（実体パスの規則・root所有の注意・bind mountとの違い）を追加
 - `03-docker-core-operations/04-network-basics-intro.md` に`docker network create`の既定ドライバが`bridge`であることの説明を追加、`04-networking-deep-dive/04-docker-bridge-networking.md`の`docker network inspect`解説に`Driver`フィールドの補足を追加
 - `04-networking-deep-dive/04-docker-bridge-networking.md` に「なぜコンテナ名で名前解決できるのか」節を追加（`127.0.0.11`の組み込みDNSサーバーの仕組み、既定bridgeとの違い）
+- Mermaid図を体系的に追加（ROADMAPの「ネットワーク構成図追加」を含めて実施）
+  - `04-networking-deep-dive/01-container-network-concepts.md`: namespace/bridge/veth pairの関係図
+  - `04-networking-deep-dive/04-docker-bridge-networking.md`: 組み込みDNS解決のsequenceDiagram
+  - `04-networking-deep-dive/06-network-troubleshooting.md`: パターン1切り分け手順のflowchart
+  - `06-compose-multi-service/02-service-discovery-and-network.md`: Composeネットワーク構成図
+  - `07-operations-and-troubleshooting/03-common-failures-playbook.md`: ポート競合切り分けのflowchart
+  - `09-capstone-project/01-project-brief.md`: 3サービス構成の目標アーキテクチャ図
 
 ## v1.0.0 - 2026-08-29
 

@@ -22,6 +22,20 @@
 3. `docker port <container>` で`-p`オプションによるポート公開設定が意図通りか確認する（指定漏れ・ポート番号の書き間違いが典型的な原因）
 4. 上記すべて問題なければ、[05-port-publishing-path.md](./05-port-publishing-path.md) の確認コマンド一覧を上から順に実行し、①〜④のどこで途切れているか特定する
 
+この切り分け手順を図にすると以下のようになります。
+
+```mermaid
+flowchart TD
+    Start["Windowsからコンテナに繋がらない"] --> CheckPs{"docker ps で<br/>STATUSはUp?"}
+    CheckPs -->|"Up以外"| Layer4["④コンテナの問題<br/>docker logsでクラッシュ原因を確認"]
+    CheckPs -->|"Up"| CheckLogs{"docker logsに<br/>エラーはないか"}
+    CheckLogs -->|"エラーあり"| Layer4
+    CheckLogs -->|"問題なし"| CheckPort{"docker portで<br/>公開設定は意図通りか"}
+    CheckPort -->|"設定ミス"| Layer3["③Docker Engineの設定ミス<br/>-pオプションを修正"]
+    CheckPort -->|"問題なし"| CheckPath["05-port-publishing-pathの<br/>4段階を順に確認"]
+    CheckPath --> Layer21["①②の問題<br/>vEthernet / WSL2側を疑う"]
+```
+
 ## 典型パターン2: WSL再起動後に繋がらなくなった
 
 - [03-wsl2-network-modes.md](./03-wsl2-network-modes.md) で学んだ通り、NATモードではWSL2 VMのIPアドレスがWSL再起動のたびに変わりえます。ただし、localhostフォワーディングがある限り、これ自体は`localhost`でのアクセスに影響しません

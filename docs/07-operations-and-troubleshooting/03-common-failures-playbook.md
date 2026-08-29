@@ -32,6 +32,14 @@ netstat -ano | findstr 8080
 
 該当プロセスを停止するか、コンテナ側のポート番号を変更して回避します。
 
+```mermaid
+flowchart TD
+    Error["bind: address already in use"] --> CheckWsl{"sudo ss -tulpn で<br/>WSL側に該当プロセスあり?"}
+    CheckWsl -->|"あり"| KillWsl["WSL側のプロセスを停止<br/>またはポート番号を変更"]
+    CheckWsl -->|"なし"| CheckWin["Windows側PowerShellで<br/>netstat -ano | findstr &lt;port&gt;"]
+    CheckWin --> KillWin["該当プロセスを停止<br/>またはポート番号を変更"]
+```
+
 ## パターン2: ディスク容量不足
 
 WSL2は仮想ディスクファイル（`ext4.vhdx`）を使っており、これは一度肥大化すると`docker system prune`しても自動的には縮小されません。

@@ -39,6 +39,20 @@ ping db
 
 IPアドレスを一切指定していないのに、サービス名だけで通信できることが確認できます。
 
+この構成を図にすると以下のようになります。
+
+```mermaid
+flowchart LR
+    Host["Windows/WSLホスト<br/>localhost:8080"] -->|"公開ポート"| Web
+    subgraph Net["compose-basics_default（ユーザー定義bridge）"]
+        Web["webコンテナ（nginx）"]
+        Db["dbコンテナ（postgres）"]
+    end
+    Web -->|"ホスト名: db"| Db
+```
+
+ホストから到達できるのは公開ポートを設定した`web`だけで、`db`はネットワーク内部からしか到達できません。これはComposeを使わずに03章・04章で自分で`docker network create`していた構成と同じで、Composeがネットワーク作成とサービス接続を自動化しているだけです。
+
 ## docker network inspectで確認
 
 04章で使ったコマンドを、Composeが自動作成したネットワークに対して実行してみます。

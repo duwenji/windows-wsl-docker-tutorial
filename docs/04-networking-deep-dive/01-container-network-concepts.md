@@ -57,6 +57,24 @@ ip link show | grep veth
 2. **bridge** — 複数のnetwork namespaceを繋ぐ仮想スイッチ
 3. **veth pair** — network namespaceとbridgeを繋ぐ仮想ケーブル
 
+図にすると、2つのコンテナが1つのbridgeを介して繋がっている関係が見えます。
+
+```mermaid
+flowchart LR
+    subgraph A["コンテナA（network namespace）"]
+        EthA["eth0"]
+    end
+    subgraph B["コンテナB（network namespace）"]
+        EthB["eth0"]
+    end
+    Bridge["bridge（仮想スイッチ、例: docker0）"]
+
+    EthA <-->|"veth pair"| Bridge
+    EthB <-->|"veth pair"| Bridge
+```
+
+コンテナ同士は直接繋がっているわけではなく、必ずbridgeを経由します。veth pairは「コンテナのeth0」と「bridge側のポート」をつなぐ1本の仮想ケーブルです。
+
 これは03章の演習で確認した「コンテナ名で通信できる」「コンテナごとに別のIPが割り当てられる」という現象の正体そのものです。次のレッスンでは、この仕組みがWindows・WSL2という層構造の中でどこに位置するのかを見ていきます。
 
 ## 章末チェックリスト

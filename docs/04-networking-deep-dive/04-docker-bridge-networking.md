@@ -71,6 +71,20 @@ Name:   web1
 Address: 172.18.0.2
 ```
 
+この問い合わせの流れを図にすると以下のようになります。
+
+```mermaid
+sequenceDiagram
+    participant C as web2コンテナ
+    participant D as 組み込みDNS(127.0.0.11)
+    participant E as Docker Engine
+
+    C->>D: web1のIPは？
+    D->>E: sample-net内のweb1を検索
+    E-->>D: 172.18.0.2
+    D-->>C: 172.18.0.2
+```
+
 ⚠️ 既定の`bridge`（`docker0`）にはこの組み込みDNSサーバーが設定されません。古い方式である`/etc/hosts`への静的な追記のみに頼るため、コンテナを再作成してIPが変わると追従できず、事実上コンテナ名での通信ができません。これがユーザー定義bridgeとの決定的な違いです。
 
 ## docker network inspectで見る内部構造
