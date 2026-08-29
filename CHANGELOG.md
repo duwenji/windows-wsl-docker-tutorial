@@ -18,6 +18,7 @@
 - `04-networking-deep-dive/03-wsl2-network-modes.md` に、localhostフォワーディングがWindows側とWSL側でポート番号の名前空間を早い者勝ちで奪い合う仕組みの説明を追加。`07-operations-and-troubleshooting/03-common-failures-playbook.md`のポート競合説明にもこの原因への参照を追加
 - `04-networking-deep-dive/03-wsl2-network-modes.md` に「なぜNATモードは企業VPN環境で問題を起こすのか」節を追加（デフォルトルートの奪い合いの具体例、VPNフィルタドライバによる遮断、経路図）
 - 同ファイルに、mirrored mode側の経路図を追加（NATモード図と対比し、中間ステップが無くなる構造を可視化）
+- `04-networking-deep-dive/04-docker-bridge-networking.md` に、`br-`インターフェースが「コンテナ1つ」ではなく「ユーザー定義ネットワーク1つ」に対応することの説明を追加（命名規則`br-<ネットワークID先頭12桁>`、確認コマンド）
 
 ## v1.0.0 - 2026-08-29
 

@@ -133,18 +133,32 @@ ip link show type bridge
 
 `docker0`に加えて、`br-`から始まるユーザー定義ネットワーク用のインターフェースも見えるはずです。これは、02章で学んだ「WSL2 VMは本物のLinuxカーネルを持つ」という事実の裏付けでもあります。
 
+⚠️ **`br-`は「コンテナ1つにつき1つ」ではなく「ユーザー定義ネットワーク1つにつき1つ」です。** 命名規則は`br-<ネットワークIDの先頭12桁>`で、そのネットワークIDは`docker network inspect sample-net --format '{{.Id}}'`で確認できます。
+
+```bash
+docker network inspect sample-net --format '{{.Id}}'
+```
+
+```
+a1b2c3d4e5f6...（64桁）
+```
+
+この先頭12文字が、`ip link show type bridge`で見える`br-a1b2c3d4e5f6`と一致します。1つのユーザー定義ネットワーク（＝1つの`br-...`）に、`web`・`web2`のような複数のコンテナがそれぞれveth pairで接続する、という関係です（01章の[container-network-concepts.md](./01-container-network-concepts.md)の図の通り）。
+
 ## 演習
 
 1. `docker network create sample-net` でユーザー定義bridgeを作成する
 2. コンテナを1つ起動して接続し、`docker network inspect sample-net`でIPアドレスを確認する
 3. `docker exec`でコンテナ内の`/etc/resolv.conf`を確認し、`nameserver 127.0.0.11`が設定されていることを確認する
 4. WSL側で `ip link show type bridge` を実行し、`docker0`と`br-`で始まるインターフェースの両方が存在することを確認する
+5. `docker network inspect sample-net --format '{{.Id}}'`の先頭12文字が、`ip link show type bridge`で見える`br-...`のインターフェース名と一致することを確認する
 
 ## 章末チェックリスト
 
 - [ ] `docker0`がWSL2 VM内の通常のLinuxブリッジであることを説明できる
 - [ ] 既定bridgeとユーザー定義bridgeで名前解決の可否が違う理由を説明できる
 - [ ] コンテナ名の名前解決が`127.0.0.11`の組み込みDNSサーバーによるものであることを説明できる
+- [ ] `br-`インターフェースが「コンテナ1つ」ではなく「ネットワーク1つ」に対応することを説明できる
 - [ ] `docker network inspect`の出力からサブネットとコンテナIPを読み取れる
 
 ## 次へ
