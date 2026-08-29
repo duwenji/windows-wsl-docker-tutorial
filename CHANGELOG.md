@@ -19,6 +19,7 @@
 - `04-networking-deep-dive/03-wsl2-network-modes.md` に「なぜNATモードは企業VPN環境で問題を起こすのか」節を追加（デフォルトルートの奪い合いの具体例、VPNフィルタドライバによる遮断、経路図）
 - 同ファイルに、mirrored mode側の経路図を追加（NATモード図と対比し、中間ステップが無くなる構造を可視化）
 - `04-networking-deep-dive/04-docker-bridge-networking.md` に、`br-`インターフェースが「コンテナ1つ」ではなく「ユーザー定義ネットワーク1つ」に対応することの説明を追加（命名規則`br-<ネットワークID先頭12桁>`、確認コマンド）
+- `08-security-and-enterprise-network/01-proxy-and-certificates.md` に、`/etc/environment`だけではaptにプロキシが効かない理由（sudoのenv_reset）の説明を追加
 
 ## v1.0.0 - 2026-08-29
 

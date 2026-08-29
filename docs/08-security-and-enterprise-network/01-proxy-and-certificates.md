@@ -31,12 +31,28 @@ export no_proxy=localhost,127.0.0.1,.example.internal
 
 ## apt用プロキシ設定
 
+前節で`/etc/environment`にプロキシを設定しましたが、**それだけではaptには効きません**。`apt install`や`apt update`はほぼ必ず`sudo`経由で実行されますが、`sudo`は既定で環境変数をリセットしてからコマンドを実行するためです（`/etc/sudoers`の`Defaults env_reset`。`LD_PRELOAD`のような環境変数を悪用した権限昇格を防ぐためのセキュリティ設計）。
+
+```bash
+# 現在のシェルではhttp_proxyが見えているのに…
+echo $http_proxy
+# → http://proxy.example.com:8080
+
+# sudo越しだと消えている
+sudo sh -c 'echo $http_proxy'
+# → （何も表示されない）
+```
+
+そのため、apt自身の設定機構に直接プロキシを書き込む必要があります。`Acquire::http::Proxy`はapt本体が読み込む設定なので、`sudo`経由かどうかに関わらず常に適用されます。
+
 `/etc/apt/apt.conf.d/proxy.conf`:
 
 ```
 Acquire::http::Proxy "http://proxy.example.com:8080";
 Acquire::https::Proxy "http://proxy.example.com:8080";
 ```
+
+💡 `/etc/sudoers`に`Defaults env_keep += "http_proxy https_proxy"`を追記すれば`sudo`越しでも環境変数を保持させることも可能ですが、`sudoers`全体への変更になり影響範囲が広くなります。apt専用の設定ファイルで完結させる方が変更が局所的で安全です。
 
 ## Docker Engine（dockerd）用プロキシ設定
 
@@ -101,6 +117,7 @@ RUN update-ca-certificates
 ## 章末チェックリスト
 
 - [ ] WSL・apt・dockerdそれぞれのプロキシ設定の違いを説明できる
+- [ ] `/etc/environment`だけではaptにプロキシが効かない理由（sudoのenv_reset）を説明できる
 - [ ] Dockerfileに認証情報を直接書いてはいけない理由を説明できる
 - [ ] コンテナ内にも証明書を別途組み込む必要がある理由を説明できる
 
