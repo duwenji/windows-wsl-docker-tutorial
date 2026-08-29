@@ -16,6 +16,7 @@
   - `07-operations-and-troubleshooting/03-common-failures-playbook.md`: ポート競合切り分けのflowchart
   - `09-capstone-project/01-project-brief.md`: 3サービス構成の目標アーキテクチャ図
 - `04-networking-deep-dive/03-wsl2-network-modes.md` に、localhostフォワーディングがWindows側とWSL側でポート番号の名前空間を早い者勝ちで奪い合う仕組みの説明を追加。`07-operations-and-troubleshooting/03-common-failures-playbook.md`のポート競合説明にもこの原因への参照を追加
+- `04-networking-deep-dive/03-wsl2-network-modes.md` に「なぜNATモードは企業VPN環境で問題を起こすのか」節を追加（デフォルトルートの奪い合いの具体例、VPNフィルタドライバによる遮断、経路図）
 
 ## v1.0.0 - 2026-08-29
 
