@@ -24,7 +24,7 @@ WSL側で何が8080番ポートを使っているか確認します。
 sudo ss -tulpn | grep 8080
 ```
 
-⚠️ **重要な注意点**: WSL側でポートを使っているプロセスが見つからない場合、犯人はWindows側にいる可能性があります。04章で学んだ層構造の通り、Windows側のプロセスがそのポートを専有していても、WSL側からは直接見えません。Windows側PowerShellで確認します。
+⚠️ **重要な注意点**: WSL側でポートを使っているプロセスが見つからない場合、犯人はWindows側にいる可能性があります。これは[03-wsl2-network-modes.md](../04-networking-deep-dive/03-wsl2-network-modes.md)で説明したlocalhostフォワーディングの仕組み上、WSL側とWindows側が同じポート番号の名前空間を早い者勝ちで奪い合うためです。Windows側のプロセスがそのポートを先に専有していても、WSL側からは直接見えません。Windows側PowerShellで確認します。
 
 ```powershell
 netstat -ano | findstr 8080

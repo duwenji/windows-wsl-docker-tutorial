@@ -57,6 +57,13 @@ hostname -I
 
 この機能があるからこそ、03章の演習で`docker run -p 8080:80`したコンテナに、Windows側から`localhost:8080`でアクセスできたのです。
 
+⚠️ **ポート番号の名前空間は実質的に共有されます。** localhostフォワーディングは、WSL2内でポートをlistenするプロセスが現れるたびに、Windows側にも同じポート番号を待ち受ける中継役を作る仕組みです。そのため、Windows側のアプリとWSL2側のアプリが同じポート番号を使おうとすると、**先にそのポートを掴んだ側が勝つ**という早い者勝ちの競合が起こり得ます。
+
+- WSL2側が先にそのポートをlistenしていた場合 → 後からWindows側の別アプリが同じポートを使おうとすると、Windows自身の通常のエラー（`address already in use`）になります
+- Windows側のアプリが先にそのポートをlistenしていた場合 → 後からWSL2側でDockerコンテナなどを同じポートで起動しても転送先が作れず、`localhost:8080`は先に動いていたWindows側のアプリの方に繋がってしまいます（エラーにはならないため気づきにくい落とし穴です）
+
+この現象が、07章の[パターン1: ポート競合](../07-operations-and-troubleshooting/03-common-failures-playbook.md)で「Windows側・WSL側の両方を確認する」必要がある理由です。
+
 ## mirrored networking mode（Windows 11 22H2+）
 
 比較的新しい方式として、**mirrored networking mode**があります。これはWSL2 VMがWindowsホストと同じネットワークインターフェース・IPアドレス空間を「鏡写し」で共有する方式です。
