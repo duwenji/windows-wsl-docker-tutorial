@@ -28,7 +28,7 @@ code .
 
 ## Dev Containers拡張のインストール
 
-拡張機能 `ms-vscode-remote.remote-containers` をインストールします。この拡張は、プロジェクトの`.devcontainer/devcontainer.json`定義に基づいて、コンテナ内で直接開発する環境を構築するためのものです。詳しい使い方は [05-vscode-dev-containers](../05-dev-workflow-and-file-sharing/03-vscode-dev-containers.md) で扱います。
+拡張機能 `ms-vscode-remote.remote-containers` をインストールします。この拡張は、プロジェクトの`.devcontainer/devcontainer.json`定義に基づいて、コンテナ内で直接開発する環境を構築するためのものです。詳しい使い方は [05-dev-workflow-and-file-sharing/03-vscode-dev-containers.md](../05-dev-workflow-and-file-sharing/03-vscode-dev-containers.md) で扱います。
 
 ## Docker拡張（任意）
 
