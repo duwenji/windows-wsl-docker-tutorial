@@ -28,6 +28,7 @@ WSL、Docker未経験者が、Windows上でWSL2とDocker Engineを組み合わ�
 - [docs/07-operations-and-troubleshooting/README.md](docs/07-operations-and-troubleshooting/README.md)
 - [docs/08-security-and-enterprise-network/README.md](docs/08-security-and-enterprise-network/README.md)
 - [docs/09-capstone-project/README.md](docs/09-capstone-project/README.md)
+- [docs/10-local-rag-anythingllm-ollama/README.md](docs/10-local-rag-anythingllm-ollama/README.md)
 - [QUICK-REFERENCE.md](QUICK-REFERENCE.md)
 - [MASTER-INDEX.md](MASTER-INDEX.md)
 

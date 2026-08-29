@@ -18,6 +18,7 @@ WSL2 + Docker Engine を使ってWindows上で開発するための日本語教�
 - [07. Operations and Troubleshooting](07-operations-and-troubleshooting/README.md)
 - [08. Security and Enterprise Network](08-security-and-enterprise-network/README.md)
 - [09. Capstone Project](09-capstone-project/README.md)
+- [10. Local RAG with AnythingLLM + Ollama](10-local-rag-anythingllm-ollama/README.md)
 
 ## 補助資料
 

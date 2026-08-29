@@ -11,6 +11,7 @@
 7. 07 Operations and Troubleshooting
 8. 08 Security and Enterprise Network
 9. 09 Capstone Project
+10. 10 Local RAG with AnythingLLM + Ollama
 
 ## 章末チェック共通項目
 
@@ -26,6 +27,8 @@
 - `docker network inspect <network>`
 - `docker compose logs -f`
 - `wsl -l -v` / `wsl --shutdown`
+- `docker compose exec ollama ollama list` / `ollama pull <model>`
+- `docker compose exec ollama nvidia-smi`（GPU passthrough確認）
 
 ## トラブルシュート優先順
 

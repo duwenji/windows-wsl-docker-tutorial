@@ -67,3 +67,10 @@
   - Project Brief
   - Build and Run
   - Final Checklist
+
+## Local RAG Extension
+
+- 10-local-rag-anythingllm-ollama
+  - Architecture and Compose Setup
+  - Selecting Japanese Models
+  - RAG Workspace and Verification

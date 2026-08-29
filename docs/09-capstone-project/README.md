@@ -20,4 +20,4 @@
 
 ## 次へ
 
-- [../../ROADMAP.md](../../ROADMAP.md)
+- [10-local-rag-anythingllm-ollama/README.md](../10-local-rag-anythingllm-ollama/README.md)
