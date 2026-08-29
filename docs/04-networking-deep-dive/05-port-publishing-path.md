@@ -57,13 +57,13 @@ sequenceDiagram
 
 トラブルが起きたとき、この表の上から順に確認することで、どの層まで到達しているかを切り分けられます。
 
-| 層 | 確認コマンド | 期待する結果 |
-|---|---|---|
-| ①Windows | `curl http://localhost:8080`（PowerShellまたはブラウザ） | nginxの応答が返る |
-| ①→② | — | ①が失敗し②が成功する場合、localhostフォワーディングかvEthernetアダプタの問題 |
-| ②WSL2 VM | `curl http://localhost:8080`（WSLターミナル内） | nginxの応答が返る |
-| ③Docker Engine | `docker ps` でSTATUSが`Up`か確認 | コンテナが起動中である |
-| ④コンテナ内 | `docker exec web curl http://localhost:80` | コンテナ内部でアプリ自体が正常に応答する |
+| 層              | 確認コマンド                                               | 期待する結果                                                                   |
+| --------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| ①Windows       | `curl http://localhost:8080`（PowerShellまたはブラウザ） | nginxの応答が返る                                                              |
+| ①→②          | —                                                         | ①が失敗し②が成功する場合、localhostフォワーディングかvEthernetアダプタの問題 |
+| ②WSL2 VM       | `curl http://localhost:8080`（WSLターミナル内）          | nginxの応答が返る                                                              |
+| ③Docker Engine | `docker ps` でSTATUSが`Up`か確認                       | コンテナが起動中である                                                         |
+| ④コンテナ内    | `docker exec web curl http://localhost:80`               | コンテナ内部でアプリ自体が正常に応答する                                       |
 
 ## 演習
 
