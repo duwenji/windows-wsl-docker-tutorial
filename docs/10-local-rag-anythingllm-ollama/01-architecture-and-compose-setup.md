@@ -107,6 +107,8 @@ sudo nvidia-ctk runtime configure --runtime=docker
 sudo systemctl restart docker
 ```
 
+💡 `nvidia-ctk`が`daemon.json`に何を登録しているのか、そもそも「コンテナランタイム」とは何かを`containerd`/`runc`のレイヤーまで掘り下げて理解したい場合は、[04-container-runtime-internals.md](./04-container-runtime-internals.md)（発展）を参照してください。
+
 `docker-compose.yml`の`ollama`サービスにGPU予約を追加します。
 
 ```yaml

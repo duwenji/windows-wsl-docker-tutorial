@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- `10-local-rag-anythingllm-ollama/04-container-runtime-internals.md`（発展）を追加：`dockerd`/`containerd`/`runc`の三層構造、`runc`が行うLinux syscallレベルの処理（namespaces/cgroups/pivot_root）、`nvidia-container-runtime`が`runc`をラップするシムである仕組みをmermaid図付きで解説。`01-architecture-and-compose-setup.md`のGPU passthrough節から参照リンクを追加、`03-rag-workspace-and-verification.md`の「次へ」を接続
 - 新章`10-local-rag-anythingllm-ollama`を追加（AnythingLLM + OllamaによるローカルRAG環境構築）
   - `01-architecture-and-compose-setup.md`: 全体アーキテクチャ、docker-compose構成、WSL2でのGPU passthrough設定
   - `02-selecting-japanese-models.md`: 日本語対応Embedding/チャットLLMモデルの選定表（qwen3-embedding, qwen3, Swallow, ELYZA等）

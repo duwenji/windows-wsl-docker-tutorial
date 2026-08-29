@@ -74,7 +74,6 @@ RAGが正しく機能しているかは、**アップロードしたドキュメ
 - [ ] RAGが実際に参照ドキュメントに基づいて回答しているかを、引用表示で検証できた
 - [ ] Embeddingモデルを変更した際に再取り込みが必要な理由を説明できる
 
-## この教材のあとに
+## 次へ
 
-- 今後の拡張予定は [../../ROADMAP.md](../../ROADMAP.md) を参照してください
-- 💡 ブラウザで https://duwenji.github.io/spa-quiz-app/ を開くと、関連トピックをクイズ形式で復習できます
+- [04-container-runtime-internals.md](./04-container-runtime-internals.md)（発展・任意）

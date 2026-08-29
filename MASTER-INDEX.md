@@ -74,3 +74,4 @@
   - Architecture and Compose Setup
   - Selecting Japanese Models
   - RAG Workspace and Verification
+  - Container Runtime Internals (Advanced)
