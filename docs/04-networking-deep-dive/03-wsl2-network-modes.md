@@ -106,6 +106,22 @@ flowchart LR
 
 mirrored modeでは、WSL2 VMがホストと同じネットワーク経路をそのまま使うため、そもそも「WSL2専用の別経路」という概念自体が無くなります。VPN側から見てもWSL2の通信はホスト自身の通信と区別がつかなくなるため、上記のような問題が構造的に起きにくくなります。
 
+同じVPN接続後の状況を、mirrored modeで図にすると次のようになります。
+
+```mermaid
+flowchart LR
+    subgraph Host["Windowsホスト（mirrored mode）"]
+        WSL["WSL2 VM<br/>ホストと同じIPアドレス空間"]
+        VPNAdapter["VPN仮想アダプタ<br/>メトリック1（最優先）"]
+    end
+    WSL -->|"ホストと同じ経路を<br/>そのまま利用"| VPNAdapter
+    VPNAdapter -->|"実際のデフォルトルート"| Internet["社内ネットワーク /<br/>インターネット"]
+
+    style VPNAdapter fill:#4ECDC4
+```
+
+NATモードの図と違い、**WSL2から`vEthernet (WSL)`やNAT変換を経由する中間ステップ自体が存在しません**。WSL2は「Windowsホストの一部」としてそのままVPN仮想アダプタの経路に乗るため、Windows自身の通信と食い違いが生じようがない、という構造になっています。
+
 ## モードの切り替え方
 
 `%UserProfile%\.wslconfig` に以下を追記します。
