@@ -4,6 +4,7 @@
 
 ### Added
 - `02-environment-setup/03-vscode-remote-wsl.md` に「WSLから起動した場合とWindowsから直接起動した場合の違い」節を追加（拡張機能の実行場所・既定シェル・ファイルアクセス経路の比較表）
+- `07-operations-and-troubleshooting/02-logs-and-monitoring.md` に`docker logs`の基本動作（一括表示で終了する点）・コンテナ名の注意点・主要オプションの比較表を追加
 
 ## v1.0.0 - 2026-08-29
 

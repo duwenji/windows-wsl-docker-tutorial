@@ -25,6 +25,20 @@ docker logs --since 10m web
 docker logs -f --tail 100 web
 ```
 
+`docker logs web`は、コンテナが起動してから標準出力・標準エラー出力に書き出した内容を一括表示し、表示し終えるとコマンド自体は終了します（`-f`を付けない限りストリーミングはしません）。`web`の部分にはコンテナ名またはコンテナIDを指定します。
+
+💡 Composeで起動した場合、サービス名がそのままコンテナ名になっているとは限りません。`docker ps`で実際のコンテナ名を確認してから`docker logs`を実行すると確実です。
+
+主なオプションの使い分けは以下の通りです。
+
+| コマンド | 意味 |
+|---|---|
+| `docker logs web` | 全ログを一括表示して終了 |
+| `docker logs -f web` | リアルタイムで追跡し続ける（終了は`Ctrl+C`） |
+| `docker logs --tail 100 web` | 末尾100行だけ表示 |
+| `docker logs --since 10m web` | 直近10分以内のログのみ |
+| `docker logs -f --tail 100 web` | 直近100行から開始してリアルタイム追跡（最もよく使う組み合わせ） |
+
 ## Composeでの複数サービスログ
 
 ```bash
