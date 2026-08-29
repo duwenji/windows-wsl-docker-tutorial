@@ -78,6 +78,8 @@ networkingMode=mirrored
 wsl --shutdown
 ```
 
+💡 `wsl --shutdown`は終了処理のみで、設定を読み込み直す処理自体は含まれていません。VMを一度壊し、次回起動時にゼロから作り直させることで新しい`networkingMode`が反映される、という仕組みは [02-environment-setup/01-install-wsl.md](../02-environment-setup/01-install-wsl.md) で詳しく説明しています。
+
 ## 2つのモードの違いが与える影響
 
 | 観点 | NATモード（既定） | mirrored networking mode |

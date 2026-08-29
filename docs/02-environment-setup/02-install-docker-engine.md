@@ -50,6 +50,8 @@ sudo usermod -aG docker $USER
 wsl --shutdown
 ```
 
+💡 `wsl --shutdown`自体は終了コマンドに過ぎず、設定や変更を読み込み直す処理は含まれていません。次にWSLを起動する際にVMがゼロから作り直されることで、`docker`グループへの追加のような変更が反映される、という仕組みは [01-install-wsl.md](./01-install-wsl.md) で詳しく説明しています。
+
 ## Dockerデーモンの起動
 
 WSLでは、ディストロによってsystemdが既定で無効になっている場合があります。以下の2パターンのどちらかで起動します。
