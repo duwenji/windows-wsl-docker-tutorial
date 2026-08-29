@@ -1,0 +1,6 @@
+title: Windows WSL Docker 教材
+description: WSL2 + Docker Engineを使ってWindows上で開発するための日本語教材
+baseurl: "/windows-wsl-docker-tutorial"
+url: "https://duwenji.github.io"
+theme: minima
+markdown: kramdown
