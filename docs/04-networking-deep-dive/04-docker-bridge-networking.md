@@ -44,6 +44,35 @@ docker inspect web --format '{{.NetworkSettings.IPAddress}}'
 
 これは03章の演習（`docker network create sample-net`でping確認した内容）の裏側にある仕組みです。実務では、複数コンテナを連携させる場合は必ずユーザー定義bridgeを使うことが推奨されます（06章のCompose章でも、この仕組みが標準で使われます）。
 
+### なぜコンテナ名で名前解決できるのか
+
+ユーザー定義bridgeに接続したコンテナには、Docker Engineが自動的にDNSサーバーの設定を書き込みます。
+
+```bash
+docker exec web2 cat /etc/resolv.conf
+```
+
+```
+nameserver 127.0.0.11
+options ndots:0
+```
+
+`127.0.0.11`は、Docker Engineがコンテナごとに用意する**組み込みDNSサーバー（embedded DNS server）**のアドレスです。コンテナが`web1`のような名前を解決しようとすると、まずこの`127.0.0.11:53`に問い合わせが飛びます。Docker Engineは、同じユーザー定義ネットワークに接続されている他のコンテナの「コンテナ名 → 現在のIPアドレス」対応表を内部で管理しており、この問い合わせに応答します。
+
+```bash
+docker exec web2 nslookup web1
+```
+
+```
+Server:    127.0.0.11
+Address:   127.0.0.11:53
+
+Name:   web1
+Address: 172.18.0.2
+```
+
+⚠️ 既定の`bridge`（`docker0`）にはこの組み込みDNSサーバーが設定されません。古い方式である`/etc/hosts`への静的な追記のみに頼るため、コンテナを再作成してIPが変わると追従できず、事実上コンテナ名での通信ができません。これがユーザー定義bridgeとの決定的な違いです。
+
 ## docker network inspectで見る内部構造
 
 ```bash
@@ -94,12 +123,14 @@ ip link show type bridge
 
 1. `docker network create sample-net` でユーザー定義bridgeを作成する
 2. コンテナを1つ起動して接続し、`docker network inspect sample-net`でIPアドレスを確認する
-3. WSL側で `ip link show type bridge` を実行し、`docker0`と`br-`で始まるインターフェースの両方が存在することを確認する
+3. `docker exec`でコンテナ内の`/etc/resolv.conf`を確認し、`nameserver 127.0.0.11`が設定されていることを確認する
+4. WSL側で `ip link show type bridge` を実行し、`docker0`と`br-`で始まるインターフェースの両方が存在することを確認する
 
 ## 章末チェックリスト
 
 - [ ] `docker0`がWSL2 VM内の通常のLinuxブリッジであることを説明できる
 - [ ] 既定bridgeとユーザー定義bridgeで名前解決の可否が違う理由を説明できる
+- [ ] コンテナ名の名前解決が`127.0.0.11`の組み込みDNSサーバーによるものであることを説明できる
 - [ ] `docker network inspect`の出力からサブネットとコンテナIPを読み取れる
 
 ## 次へ

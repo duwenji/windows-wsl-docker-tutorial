@@ -7,6 +7,7 @@
 - `07-operations-and-troubleshooting/02-logs-and-monitoring.md` に`docker logs`の基本動作（一括表示で終了する点）・コンテナ名の注意点・主要オプションの比較表を追加
 - `03-docker-core-operations/03-volume-basics.md` に`docker volume inspect`の`Mountpoint`フィールドの説明（実体パスの規則・root所有の注意・bind mountとの違い）を追加
 - `03-docker-core-operations/04-network-basics-intro.md` に`docker network create`の既定ドライバが`bridge`であることの説明を追加、`04-networking-deep-dive/04-docker-bridge-networking.md`の`docker network inspect`解説に`Driver`フィールドの補足を追加
+- `04-networking-deep-dive/04-docker-bridge-networking.md` に「なぜコンテナ名で名前解決できるのか」節を追加（`127.0.0.11`の組み込みDNSサーバーの仕組み、既定bridgeとの違い）
 
 ## v1.0.0 - 2026-08-29
 
