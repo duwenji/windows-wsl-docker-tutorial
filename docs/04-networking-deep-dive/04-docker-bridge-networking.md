@@ -75,6 +75,7 @@ docker network inspect sample-net
 ]
 ```
 
+- `Driver` — このネットワークが使うドライバ。`--driver`を指定せずに作成しても既定で`bridge`になります（03章のコラム参照）
 - `IPAM.Config` — このネットワークに割り当てられたサブネットとゲートウェイ
 - `Containers` — 現在このネットワークに接続しているコンテナと、それぞれのIPアドレス
 
