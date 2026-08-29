@@ -1,0 +1,19 @@
+{
+  "sourceRoot": "./docs",
+  "outputDir": "./ebook-output",
+  "projectName": "windows-wsl-docker-tutorial",
+  "formats": [
+    "epub",
+    "pdf",
+    "kdp-markdown"
+  ],
+  "metadataFile": "./.github/skills-config/ebook-build/windows-wsl-docker-tutorial.metadata.yaml",
+  "kdpMetadataFile": "./.github/skills-config/ebook-build/windows-wsl-docker-tutorial.kdp.yaml",
+  "chapterDirPattern": "^\\d{2}-",
+  "chapterFilePattern": "^\\d{2}-.*\\.md$",
+  "coverFile": "00-COVER.md",
+  "mermaidMode": "required",
+  "mermaidFormat": "svg",
+  "failOnMermaidError": true,
+  "preserveTemp": false
+}

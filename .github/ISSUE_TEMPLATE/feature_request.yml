@@ -1,0 +1,36 @@
+name: Feature request
+description: 教材に追加したい内容や改善案を提案します
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 背景・課題
+      description: どんな学習上の課題を解決したいですか？
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 提案内容
+      description: 追加したい章、手順、演習など
+    validations:
+      required: true
+
+  - type: dropdown
+    id: chapter
+    attributes:
+      label: 関連する章
+      options:
+        - 01. WSL and Docker Fundamentals
+        - 02. Environment Setup
+        - 03. Docker Core Operations
+        - 04. Networking Deep Dive
+        - 05. Dev Workflow and File Sharing
+        - 06. Compose Multi Service
+        - 07. Operations and Troubleshooting
+        - 08. Security and Enterprise Network
+        - 09. Capstone Project
+        - その他（QUICK-REFERENCE / MASTER-INDEX など）

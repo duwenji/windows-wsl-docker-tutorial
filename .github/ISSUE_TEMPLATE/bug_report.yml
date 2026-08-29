@@ -1,0 +1,34 @@
+name: Bug report
+description: 教材内容や手順の不具合を報告します
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 概要
+      description: 何が起きたかを簡潔に書いてください
+      placeholder: 例) `03-image-basics.md` のコマンド例が実行できない
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順
+      description: どのページで、どの操作をすると起きたか
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待する結果
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 環境
+      description: OS、WSLバージョン、Dockerバージョンなど

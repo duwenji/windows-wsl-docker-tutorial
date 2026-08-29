@@ -1,0 +1,27 @@
+title: Windows WSL Docker教材（初学者向け）
+subtitle: WSL2 + Docker Engineで学ぶ実践ガイド
+description: >
+  Windows 11 + WSL2 + Docker Engine 未経験者が、環境構築からネットワークの仕組み、開発ワークフロー、
+  運用、セキュリティまでを段階的に学べる日本語教材です。Docker Desktopに頼らずWSL内でDocker Engineを
+  直接動かし、実務導入前に全体像をつかみたい開発者に向けて構成しています。
+keywords:
+  - WSL
+  - Docker
+  - DevOps
+  - Windows
+  - Networking
+  - Container
+  - Tutorial
+categories:
+  - Computers / System Administration / General
+  - Computers / Software Development / Tools
+  - Computers / Networking / General
+listPrice: "1980 JPY"
+royaltyPlan: "70%"
+territories: Worldwide
+kdpSelect: "No"
+ageRange: 指定なし
+gradeRange: 指定なし
+trimSize: "6in x 9in"
+bleed: "No bleed"
+layout: fixed-layout PDF

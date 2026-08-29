@@ -1,0 +1,33 @@
+title: "Windows WSL Docker教材（初学者向け）"
+subtitle: "WSL2 + Docker Engineで学ぶ実践ガイド"
+creator: "杜 文吉"
+date: "2026-08-29"
+language: ja-JP
+publisher: "Self Published"
+rights: "Creative Commons Attribution 4.0 International License"
+identifier: "windows-wsl-docker-tutorial-v1"
+description: |
+  Windows 11 + WSL2 + Docker Engine 未経験者が、環境構築からネットワークの仕組み、
+  開発ワークフロー、運用、セキュリティまでを段階的に学べる日本語教材です。
+  Docker Desktopに頼らずWSL内でDocker Engineを直接動かし、Windows・WSL2・Docker間の
+  層構造を正確に理解することを重視しています。
+keywords:
+  - WSL
+  - WSL2
+  - Docker
+  - Docker Engine
+  - DevOps
+  - Windows
+  - Networking
+cover: "00-COVER.md"
+toc: true
+toc-depth: 2
+chapters:
+  auto-discover: true
+  dir-pattern: "^\\d{2}-"
+  file-pattern: "^\\d{2}-.*\\.md$"
+include-readme: false
+version: "1.0"
+revision-date: "2026-08-29"
+license: "CC-BY-4.0"
+license-url: "https://creativecommons.org/licenses/by/4.0/"
