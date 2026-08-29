@@ -66,7 +66,24 @@ docker rm test2
 docker volume inspect myvol
 ```
 
-`Mountpoint`にホスト（WSL2 VM）側の実体パスが表示されます。
+```json
+[
+    {
+        "CreatedAt": "2026-08-29T10:00:00Z",
+        "Driver": "local",
+        "Mountpoint": "/var/lib/docker/volumes/myvol/_data",
+        "Name": "myvol",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+```
+
+`Mountpoint`は、named volumeの実データがホスト（WSL2 VM）側のどこに保存されているかを示す絶対パスです。既定のlocalドライバでは`/var/lib/docker/volumes/<volume名>/_data`という規則的なパスになります。
+
+⚠️ `/var/lib/docker`配下はroot所有かつDocker Engineの内部管理領域なので、直接編集するのは避けてください。中身を確認・編集したい場合は、コンテナ経由でマウントするか`docker cp`を使うのが安全です。
+
+💡 `Mountpoint`はnamed volume固有のフィールドです。bind mountは`-v ホスト側パス:コンテナ側パス`で指定したパスがそのまま使われるだけで、Dockerが管理する専用領域を持たないため、`Mountpoint`という概念はありません。
 
 ## bind mount
 
@@ -85,12 +102,12 @@ docker rm test3
 
 ## named volume vs bind mountの使い分け
 
-| 観点 | named volume | bind mount |
-|---|---|---|
-| 管理者 | Docker Engineが管理 | ユーザーが指定したホスト側パス |
-| 用途の典型例 | DBデータなどの永続化 | 開発中のソースコードの共有 |
-| ホスト側から直接編集 | しにくい（`docker volume inspect`で場所を調べる必要がある） | しやすい（普段使っているエディタで直接編集できる） |
-| 性能（WSL2上） | 常に高速（WSL2 VM内のファイルシステムに直接存在） | ホスト側パスの場所次第（WSL側パスなら高速、Windows側パスは低速） |
+| 観点                 | named volume                                                  | bind mount                                                       |
+| -------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------- |
+| 管理者               | Docker Engineが管理                                           | ユーザーが指定したホスト側パス                                   |
+| 用途の典型例         | DBデータなどの永続化                                          | 開発中のソースコードの共有                                       |
+| ホスト側から直接編集 | しにくい（`docker volume inspect`で場所を調べる必要がある） | しやすい（普段使っているエディタで直接編集できる）               |
+| 性能（WSL2上）       | 常に高速（WSL2 VM内のファイルシステムに直接存在）             | ホスト側パスの場所次第（WSL側パスなら高速、Windows側パスは低速） |
 
 ## 演習
 
