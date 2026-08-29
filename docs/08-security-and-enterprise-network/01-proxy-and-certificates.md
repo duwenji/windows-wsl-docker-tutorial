@@ -91,6 +91,24 @@ docker build \
 
 ⚠️ プロキシのURLや認証情報をDockerfile内に直接`ENV`で書き込んではいけません。ビルド後のイメージレイヤに認証情報が残ってしまい、イメージを配布した相手に漏洩するリスクがあります。`--build-arg`は既定ではイメージのレイヤ履歴に残ってしまう点にも注意し、認証情報を含む場合は`--secret`機能（BuildKit）の利用を検討してください。
 
+## 4つのプロキシ設定の全体像
+
+ここまで4つの設定方法を見てきましたが、それぞれ**読み込み元が別々**で、1つ設定すれば他に自動で伝わるものではありません。
+
+```mermaid
+flowchart TD
+    Env["/etc/environment<br/>http_proxy=..."] -->|"PAMがログイン<br/>セッションに反映"| Shell["通常のシェルコマンド"]
+    Env -.->|"sudoのenv_resetで<br/>消える"| SudoShell["sudo経由のコマンド<br/>（apt install等）"]
+
+    AptConf["apt.conf.d/proxy.conf"] --> Apt["aptコマンド"]
+    SystemdConf["docker.service.d/<br/>http-proxy.conf"] --> Dockerd["dockerdデーモン"]
+    BuildArg["--build-arg<br/>HTTP_PROXY"] --> BuildContainer["docker build中の<br/>一時コンテナ"]
+
+    style SudoShell fill:#FFD93D
+```
+
+`/etc/environment`が直接効くのは「PAM経由のログインセッションかつsudoを介さない」場合だけです。apt・dockerd・ビルド時コンテナは、それぞれ専用の設定ファイル／オプションを個別に用意しないとプロキシが適用されません。
+
 ## 社内CA証明書の組み込み
 
 社内独自のCA証明書を使ったTLS通信（社内Git、社内パッケージリポジトリなど）を行う場合、WSL側にも証明書を組み込む必要があります。
@@ -107,6 +125,26 @@ FROM ubuntu:22.04
 COPY company-ca.crt /usr/local/share/ca-certificates/
 RUN update-ca-certificates
 ```
+
+図にすると、WSL側とコンテナ側の証明書ストアが別物であることがはっきりします。
+
+```mermaid
+flowchart LR
+    subgraph WSLSide["WSL（Ubuntu）"]
+        WSLCert["/usr/local/share/ca-certificates/<br/>company-ca.crt"]
+    end
+    subgraph ImageBuild["Dockerfile"]
+        DockerfileCert["COPY company-ca.crt<br/>+ update-ca-certificates"]
+    end
+    subgraph ContainerFS["コンテナの独立したファイルシステム"]
+        ContainerCert["/usr/local/share/ca-certificates/<br/>company-ca.crt"]
+    end
+
+    WSLCert -.->|"別々のファイルシステム<br/>自動では伝わらない"| ContainerCert
+    DockerfileCert -->|"ビルド時に明示的にコピー"| ContainerCert
+```
+
+WSL側の証明書ストアを更新しても、コンテナ側には**何も伝わりません**。コンテナに証明書を持たせる唯一の経路はDockerfile経由でのコピーです。
 
 ## 演習
 
