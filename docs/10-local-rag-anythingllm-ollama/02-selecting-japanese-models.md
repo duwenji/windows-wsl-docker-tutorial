@@ -28,8 +28,9 @@ RAGでは2種類のモデルを使い分けます。
 | **qwen3-embedding**（推奨） | `qwen3-embedding:0.6b` / `:4b` / `:8b` | 0.6B〜8B | Ollama公式ライブラリ、多言語（日本語含む）、Apache-2.0、MTEB上位。0.6bはメモリ節約、4b/8bは精度重視 |
 | embeddinggemma                    | `embeddinggemma`                           | 300M     | Google製、軽量・多言語、低スペック環境向け                                                          |
 | nomic-embed-text-v2-moe           | `nomic-embed-text-v2-moe`                  | -        | 多言語対応、Ollamaで人気のシリーズ                                                                  |
+| bge-m3                            | `bge-m3:567m`                               | 567M     | BAAI製、Ollama公式ライブラリに掲載。密集/多ベクトル/スパース検索を同時実行でき、100以上の言語・8Kコンテキストに対応                |
 
-`bge-m3`は多言語RAGでよく紹介されますが、Ollama公式ライブラリには存在しません（`bge-large`のみ）。**AnythingLLM + Ollama構成では`qwen3-embedding`を第一候補**とするのが無難です。
+`bge-m3`はOllama公式ライブラリにも`bge-m3:567m`として掲載されており、多言語RAG向けの選択肢として利用できます。ただし本教材では、Apache-2.0ライセンスでMTEB上位かつ日本語対応が明記されている**`qwen3-embedding`を第一候補**とするのが無難です。
 
 ```bash
 docker compose exec ollama ollama pull qwen3-embedding:0.6b

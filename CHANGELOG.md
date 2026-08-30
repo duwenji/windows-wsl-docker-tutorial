@@ -31,6 +31,9 @@
 - `08-security-and-enterprise-network/01-proxy-and-certificates.md` に、`/etc/environment`だけではaptにプロキシが効かない理由（sudoのenv_reset）の説明を追加
 - 同ファイルにMermaid図を2件追加: 4つのプロキシ設定（環境変数/apt/dockerd/ビルド時）が独立している全体像、WSL側とコンテナ側のCA証明書ストアが別物であることの図
 
+### Fixed
+- `10-local-rag-anythingllm-ollama/02-selecting-japanese-models.md` の「`bge-m3`はOllama公式ライブラリには存在しない」という記述を訂正：現在は`bge-m3:567m`として公式ライブラリに掲載されているため、Embeddingモデル表に追記した上で説明文を修正
+
 ## v1.0.0 - 2026-08-29
 
 ### Added
