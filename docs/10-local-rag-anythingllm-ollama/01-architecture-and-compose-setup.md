@@ -156,6 +156,29 @@ local-rag-ollama-1        ollama/ollama:latest              "/bin/ollama serve" 
 | `CREATED` / `STATUS` | `anythingllm`は起動直後だと`Up ... (health: starting)`のように表示されます。これはイメージ側にHEALTHCHECKが定義されており、アプリケーションの起動完了を待っている状態を示します。しばらくすると`Up ... (healthy)`に変わります。`ollama`にはHEALTHCHECKが定義されていないため、単に`Up ...`とだけ表示されます。                                                                                                                                              |
 | `PORTS`                | `ollama`は`11434/tcp`のみで、ホスト側ポートが付いていません。`ports:`を書いていないため**コンテナ間ネットワーク内にのみ公開**されており、Windows側から`localhost:11434`には到達できません（`anythingllm`からサービス名`ollama`経由でのみアクセス可能）。`anythingllm`は`ports: ["3001:3001"]`の指定通り、IPv4の`0.0.0.0:3001->3001/tcp`とIPv6の`[::]:3001->3001/tcp`の両方にフォワードされ、Windows側から`localhost:3001`に到達できます。 |
 
+### `anythingllm`のHEALTHCHECKは実際に何をチェックしているか
+
+`mintplexlabs/anythingllm`イメージのDockerfileには、次のような`HEALTHCHECK`命令が定義されています。
+
+```dockerfile
+HEALTHCHECK --interval=1m --timeout=10s --start-period=1m \
+  CMD /bin/bash /usr/local/bin/docker-healthcheck.sh || exit 1
+```
+
+`docker-healthcheck.sh`の中身は、コンテナ自身に対する単純なHTTPチェックです。
+
+```bash
+curl -f -s -o /dev/null -w '%{http_code}' http://localhost:${SERVER_PORT:-3001}/api/ping
+```
+
+つまり、コンテナ内部から自分自身の`/api/ping`エンドポイントにリクエストを送り、HTTPステータス200が返れば`exit 0`（healthy扱い）、返らなければ`exit 1`（unhealthy扱い）としています。各オプションの意味は次の通りです。
+
+- `--start-period=1m`：起動直後の1分間はチェックに失敗してもカウントしない猶予期間です。AnythingLLMの初期化中に誤って`unhealthy`と判定されないための仕組みで、この猶予期間中の表示が`Up ... (health: starting)`にあたります
+- `--interval=1m`：猶予期間が終わった後、1分ごとに再チェックします
+- `--timeout=10s`：10秒以内に応答がなければ、そのチェックは失敗扱いになります
+
+一方`ollama/ollama`イメージにはこの`HEALTHCHECK`命令自体が定義されていないため、`docker compose ps -a`では`(healthy)`のような表示が一切出ず、単に`Up ...`とだけ表示されます。
+
 Ollama単体のAPI疎通確認:
 
 ```bash
@@ -223,6 +246,7 @@ docker compose exec ollama nvidia-smi
 - [ ] AnythingLLMとOllamaの役割分担（オーケストレーション vs 推論）を説明できる
 - [ ] `OLLAMA_BASE_PATH`にサービス名を指定する理由を説明できる
 - [ ] WSL2でのGPU passthroughが`--gpus all`相当に限定される制約を説明できる
+- [ ] `anythingllm`の`(health: starting)`→`(healthy)`という表示が、`/api/ping`への定期的なHTTPチェックに基づくものであることを説明できる
 
 ## 次へ
 
