@@ -44,14 +44,14 @@ Ubuntuの標準リポジトリにも`docker.io`という名前でDockerパッケ
 
 ### 各コマンドが何をしているか
 
-| コマンド | 役割 |
-|---|---|
-| `apt-get install ca-certificates curl gnupg` | 後続の手順で使う3点セットを用意（HTTPS証明書検証・ダウンロード・GPG鍵の処理） |
-| `install -m 0755 -d /etc/apt/keyrings` | 信頼済みGPG鍵を置く専用ディレクトリを作成（`0755`＝apt実行時の非特権ユーザーからも読み取れる権限） |
-| `curl ... \| gpg --dearmor -o ...` | Docker公式のGPG公開鍵をダウンロードし、テキスト形式（ASCII armor）からapt用のバイナリ形式に変換して保存 |
-| `chmod a+r` | 鍵ファイルを全ユーザーが読める状態にする（aptは専用の低権限ユーザーでリポジトリ検証を行うため） |
+| コマンド                                               | 役割                                                                                                                                  |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `apt-get install ca-certificates curl gnupg`         | 後続の手順で使う3点セットを用意（HTTPS証明書検証・ダウンロード・GPG鍵の処理）                                                         |
+| `install -m 0755 -d /etc/apt/keyrings`               | 信頼済みGPG鍵を置く専用ディレクトリを作成（`0755`＝apt実行時の非特権ユーザーからも読み取れる権限）                                  |
+| `curl ... \| gpg --dearmor -o ...`                    | Docker公式のGPG公開鍵をダウンロードし、テキスト形式（ASCII armor）からapt用のバイナリ形式に変換して保存                               |
+| `chmod a+r`                                          | 鍵ファイルを全ユーザーが読める状態にする（aptは専用の低権限ユーザーでリポジトリ検証を行うため）                                       |
 | `echo ... \| tee /etc/apt/sources.list.d/docker.list` | 「このリポジトリはこのGPG鍵（`signed-by=`）で署名されたパッケージだけを信頼する」という設定を新規のリポジトリ定義ファイルとして追加 |
-| 2回目の`apt-get update` | 直前に追加したDocker公式リポジトリの情報を読み込み直す（これをしないと新しいリポジトリの存在自体をaptがまだ認識していない） |
+| 2回目の`apt-get update`                              | 直前に追加したDocker公式リポジトリの情報を読み込み直す（これをしないと新しいリポジトリの存在自体をaptがまだ認識していない）           |
 
 `signed-by=/etc/apt/keyrings/docker.gpg`の部分は、「このリポジトリから取得したパッケージの署名は、このファイルの鍵で検証する」という指定です。GPG鍵とリポジトリ定義を1対1で明示的に紐付けることで、万一他のリポジトリ用に登録した別の鍵が誤って流用される事態を防いでいます。
 
@@ -128,6 +128,36 @@ This message shows that your installation appears to be working correctly.
 
 このメッセージが表示されれば、イメージのpull・コンテナの起動・終了までの一連の流れが正常に動作しています。
 
+### 実行後の後始末は必要か
+
+`docker run`は既定では**終了後もコンテナを削除しません**。実行後に確認すると、終了済み（`Exited`）状態のコンテナが残っていることが分かります。
+
+```bash
+docker ps -a
+```
+
+```
+CONTAINER ID   IMAGE         COMMAND    CREATED         STATUS                     NAMES
+xxxxxxxxxxxx   hello-world   "/hello"   1 minute ago    Exited (0) 1 minute ago    happy_lovelace
+```
+
+これは不具合ではなく仕様です。**コンテナが失敗して終了した場合に、後から`docker logs <ID>`で原因を調べられるようにするため**、明示的に削除しない限り残すという設計になっています。もし終了と同時に自動消滅する仕様だったら、失敗時の調査ができなくなってしまいます。
+
+`hello-world`イメージ自体も十数KB程度と小さく、コンテナのメタデータも軽量なので、この段階で放置してもディスク容量的な実害はほとんどありません。ただし気になる場合や、後始末の練習として以下のコマンドも押さえておくと良いでしょう。
+
+```bash
+# 個別に削除
+docker rm <CONTAINER ID>
+
+# 終了済みコンテナを一括削除
+docker container prune
+
+# 最初から使い捨てにしたい場合（終了と同時に自動削除）
+docker run --rm hello-world
+```
+
+06章以降で複数のコンテナを繰り返し起動していくと、この「終了済みコンテナが黙って蓄積していく」性質がディスク圧迫や紛らわしさの原因になっていきます。
+
 ## 演習
 
 1. Docker Engineをインストールする
@@ -142,6 +172,7 @@ This message shows that your installation appears to be working correctly.
 - [ ] WSLで既定でsystemdが無効になっている理由を説明できる
 - [ ] `apt install docker.io`ではなくDocker公式リポジトリを使う理由を説明できる
 - [ ] `signed-by=`によるGPG鍵とリポジトリの紐付けの目的を説明できる
+- [ ] `docker run`後にコンテナが自動削除されない理由と、`docker rm`/`--rm`の使い分けを説明できる
 
 ## 次へ
 
