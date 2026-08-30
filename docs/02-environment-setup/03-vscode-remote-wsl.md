@@ -32,6 +32,26 @@ code .
 
 WSLから起動すると、`ms-vscode-remote.remote-wsl` 拡張が自動的に働き、**UI（クライアント）はWindows側で表示されたまま、実体である「VS Codeサーバー」がWSL（Linux）側で起動する**構成になります。拡張機能・言語サーバー・デバッガなどはこのサーバー側、つまりWSL内で実行されます。
 
+```mermaid
+flowchart TB
+    subgraph Windows["① Windows ホスト"]
+        UI["VS Code UI<br/>（ウィンドウ・キーボード/マウス入力）"]
+    end
+    subgraph WSL2["② WSL2（Ubuntu）"]
+        Server["VS Codeサーバー<br/>（初回 code . 実行時に自動インストール）"]
+        Ext["拡張機能 / 言語サーバー / デバッガ"]
+        Term["統合ターミナル（bash/zsh）"]
+        FS["Linuxファイルシステム<br/>(/home/&lt;user&gt;/...)"]
+    end
+
+    UI <-->|"remote-wsl拡張による接続"| Server
+    Server --> Ext
+    Server --> Term
+    Server --> FS
+```
+
+UI（見た目・操作）はWindows側に残ったまま、拡張機能・ターミナル・ファイルアクセスといった「中身」がまるごとWSL側に移る、という点が図のポイントです。これにより、普段どおりWindowsのGUIを操作しながら、実行環境だけをLinux側に切り替えられます。
+
 | 項目 | WSLから起動（`code .`） | Windowsから直接起動 |
 |---|---|---|
 | ファイルアクセス | WSL内のLinuxファイルシステムを直接読み書き | Windows側のファイルシステムを直接読み書き |

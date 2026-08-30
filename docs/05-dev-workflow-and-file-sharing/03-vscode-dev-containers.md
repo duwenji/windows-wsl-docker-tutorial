@@ -58,6 +58,25 @@ Dev Containersは、bind mount元としてプロジェクトフォルダをそ�
 
 逆に、Windows側のフォルダ（`C:\Users\...\projects\sample-dev`）を直接開いてDev Containersを起動すると、bind mount元がWindows側パスになり、性能低下の原因になります。**必ずRemote-WSLでWSL側フォルダを開いてからDev Containersを起動する**、という順序を徹底してください。
 
+```mermaid
+flowchart TB
+    Start(["sample-devプロジェクトを開く"]) --> Q{"どちらのパスから開いたか"}
+
+    Q -->|"WSL側パス<br/>~/projects/sample-dev"| Good["Remote-WSLでWSL側フォルダを開く<br/>（左下: WSL: Ubuntu）"]
+    Q -->|"Windows側パス<br/>C:\Users\...\projects\sample-dev"| Bad["Windowsから直接フォルダを開く"]
+
+    Good --> ReopenGood["Dev Containers: Reopen in Container"]
+    Bad --> ReopenBad["Dev Containers: Reopen in Container"]
+
+    ReopenGood --> MountGood["bind mount元 = WSL側パス<br/>（ネイティブLinuxファイルシステム）"]
+    ReopenBad --> MountBad["bind mount元 = Windows側パス<br/>（9pプロトコル越し）"]
+
+    MountGood --> FastNote["高速な開発ループ"]
+    MountBad --> SlowNote["性能低下<br/>（node_modules等の大量ファイル操作で顕著）"]
+```
+
+同じ`Dev Containers: Reopen in Container`という操作でも、**その直前にどちらのファイルシステムパスでフォルダを開いていたか**によって、bind mount元がまるごと変わってしまう点に注意してください。
+
 ## 演習
 
 1. `sample-dev`プロジェクトを作成し、Remote-WSLでWSL側フォルダとして開く

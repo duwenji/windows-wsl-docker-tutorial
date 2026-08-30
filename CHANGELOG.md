@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+- `02-environment-setup/03-vscode-remote-wsl.md` にmermaid図を追加：Remote-WSL拡張によるUI（Windows側）とVS Codeサーバー（WSL側）のクライアント/サーバー分離構造を可視化
+- `05-dev-workflow-and-file-sharing/03-vscode-dev-containers.md` にmermaid図を追加：Dev Containers起動時、直前に開いていたパス（WSL側 vs Windows側）によってbind mount元と性能が分岐する様子をflowchartで可視化
 - `10-local-rag-anythingllm-ollama/01-architecture-and-compose-setup.md` に「`anythingllm`のHEALTHCHECKは実際に何をチェックしているか」節を追加：`mintplexlabs/anythingllm`イメージのHEALTHCHECK命令（`--interval=1m --timeout=10s --start-period=1m`）と`docker-healthcheck.sh`が`/api/ping`へHTTPチェックしている実装を解説。章末チェックリストに関連項目を1件追加
 - `02-environment-setup/02-install-docker-engine.md` の動作確認節に「実行後の後始末は必要か」を追加：`docker run`が終了済みコンテナを既定で残す理由（失敗時の`docker logs`調査のため）、`docker rm`/`docker container prune`/`--rm`の使い分けを解説。章末チェックリストに関連項目を1件追加
 - `02-environment-setup/02-install-docker-engine.md` に「なぜ`apt install docker.io`ではなくこの手順なのか」節と、インストールコマンド各行の役割解説表を追加（GPG鍵の`dearmor`/`signed-by`の意味、アーキテクチャ・コードネームを動的取得する理由を含む）。章末チェックリストに関連項目を2件追加
