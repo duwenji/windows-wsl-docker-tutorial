@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- `05-dev-workflow-and-file-sharing/03-vscode-dev-containers.md` に「OS・ランタイム・ツールをコードとして記述する」節を追加：`image`/独自`Dockerfile`によるOS・ランタイムバージョン指定、Dev Container Features・`postCreateCommand`によるツール追加の2手法を具体例付きで解説し、環境構築知識がGit管理下の実行可能な設定ファイルに置き換わる利点を整理。章末チェックリストに関連項目を1件追加
 - `05-dev-workflow-and-file-sharing/03-vscode-dev-containers.md` に「Dev Containersを利用するメリット」節を追加：環境の再現性、ホスト環境を汚さない点、オンボーディング高速化、拡張機能の分離、本番/CI環境との近似、Remote-WSLとの組み合わせによる高速な開発ループ、およびトレードオフ（初回pull時間、ホストとの認証情報共有）を整理。学習目標・章末チェックリストに関連項目を1件ずつ追加
 - `05-dev-workflow-and-file-sharing/03-vscode-dev-containers.md` に「Reopen in Containerで内部的に何が起きるか」節を追加：起動処理の流れ（devcontainer.json読み込み→イメージpull→コンテナ起動→コンテナ内VS Codeサーバーのインストール→拡張機能再インストール→接続切り替え）をsequenceDiagramで、実行前後の構成変化（WSL側サーバー接続→コンテナ内サーバー接続への切り替わり、VS Codeサーバーが二重にネストする点）をflowchartで可視化。章末チェックリストに関連項目を1件追加
 - `02-environment-setup/03-vscode-remote-wsl.md` にmermaid図を追加：Remote-WSL拡張によるUI（Windows側）とVS Codeサーバー（WSL側）のクライアント/サーバー分離構造を可視化

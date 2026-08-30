@@ -49,6 +49,48 @@ mkdir -p ~/projects/sample-dev/.devcontainer
 - `workspaceFolder`: コンテナ内でプロジェクトを配置するパス
 - `forwardPorts`: コンテナ内で使うポートをホスト側にも自動転送する設定（04章で学んだ`-p`相当をVS Codeが自動で行う）
 
+## OS・ランタイム・ツールをコードとして記述する
+
+前節の「環境の再現性」は、`devcontainer.json`（および必要に応じて組み合わせる`Dockerfile`）に、次の3種類の要素を設定ファイルとして書き下せることで実現されています。
+
+**OS・ランタイムバージョン**: `image`にタグ付きのDockerイメージを指定するだけで確定します（上の最小構成例がまさにこれです）。既存イメージでは足りない場合は、独自の`Dockerfile`をビルドして使うこともできます。
+
+```json
+{
+  "build": {
+    "dockerfile": "Dockerfile"
+  }
+}
+```
+
+```dockerfile
+FROM node:20-bookworm
+RUN apt-get update && apt-get install -y postgresql-client
+```
+
+**インストール済みツール**: 主に2通りの方法があります。
+
+- **Dev Container Features**: Git・AWS CLI・Docker-in-Dockerなど、よく使うツールセットを宣言的に追加できる公式カタログ機能
+
+  ```json
+  {
+    "features": {
+      "ghcr.io/devcontainers/features/git:1": {},
+      "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    }
+  }
+  ```
+
+- **`postCreateCommand`**: コンテナ作成直後に一度だけ実行されるコマンド。依存パッケージのインストールなど、イメージに焼き込むほどではない初期化処理に使う
+
+  ```json
+  {
+    "postCreateCommand": "npm install"
+  }
+  ```
+
+これらはすべてプロジェクトのGitリポジトリにテキストファイルとしてコミットされます。従来なら「READMEに手順を書く」形で口頭伝承やドキュメントに依存していた環境構築の知識が、`devcontainer.json`/`Dockerfile`という実行可能な設定ファイルに置き換わることで、`git diff`で変更内容をレビューでき、`git log`で変更理由を追跡でき、クローンするだけで環境の定義そのものが手に入る、という通常のアプリケーションコードと同じ管理方法を開発環境自体にも適用できます。
+
 ## 起動確認
 
 1. Remote-WSL拡張で `~/projects/sample-dev` をVS Codeで開く
@@ -165,6 +207,7 @@ flowchart TB
 
 - [ ] Dev Containersを利用するメリットを説明できる
 - [ ] `devcontainer.json`の最小構成を作成できた
+- [ ] `features`や`postCreateCommand`、独自`Dockerfile`でツール・OS/ランタイムをコードとして記述する方法を説明できる
 - [ ] Dev Containersでコンテナ内開発環境を起動できた
 - [ ] Reopen in Container実行時にVS Codeサーバーの接続先がWSL側からコンテナ内へ切り替わる仕組みを説明できる
 - [ ] Remote-WSL経由で開くことの重要性を説明できる
