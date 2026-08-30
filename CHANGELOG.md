@@ -33,6 +33,7 @@
 - 同ファイルにMermaid図を2件追加: 4つのプロキシ設定（環境変数/apt/dockerd/ビルド時）が独立している全体像、WSL側とコンテナ側のCA証明書ストアが別物であることの図
 
 ### Fixed
+- `10-local-rag-anythingllm-ollama/01-architecture-and-compose-setup.md` の`docker-compose.yml`に、チャット用LLMモデルを指定する`OLLAMA_MODEL_PREF=qwen3:8b`が抜けていたため追加（Embedding側の`EMBEDDING_MODEL_PREF`は設定済みだったが、対応するチャット側の設定が欠落していた）。解説文・設定項目表・章末チェックリストも合わせて更新
 - `10-local-rag-anythingllm-ollama/02-selecting-japanese-models.md` の「`bge-m3`はOllama公式ライブラリには存在しない」という記述を訂正：現在は`bge-m3:567m`として公式ライブラリに掲載されているため、Embeddingモデル表に追記した上で説明文を修正
 
 ## v1.0.0 - 2026-08-29

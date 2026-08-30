@@ -59,6 +59,7 @@ services:
       - STORAGE_DIR=/app/server/storage
       - LLM_PROVIDER=ollama
       - OLLAMA_BASE_PATH=http://ollama:11434
+      - OLLAMA_MODEL_PREF=qwen3:8b
       - EMBEDDING_ENGINE=ollama
       - EMBEDDING_BASE_PATH=http://ollama:11434
       - EMBEDDING_MODEL_PREF=qwen3-embedding:0.6b
@@ -76,15 +77,17 @@ volumes:
 
 `OLLAMA_BASE_PATH`にはコンテナ名ではなくComposeの**サービス名**`ollama`を指定します。06章で学んだ通り、Composeが作るユーザー定義bridgeネットワーク上ではサービス名がそのままホスト名として名前解決されるためです。
 
+`OLLAMA_MODEL_PREF`は、Embeddingにおける`EMBEDDING_MODEL_PREF`に相当する、**チャット用LLMモデル**を指定する環境変数です。ここでは02章で推奨する`qwen3:8b`を初期値として指定しています。
+
 ### 各設定項目の説明
 
-| 項目                        | 内容                                                                                                                                                                                                                                                         |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `image`                   | Docker Hub上の公式イメージをそのまま利用します。Dockerfileを自前で書く必要はありません。                                                                                                                                                                     |
-| `environment`             | AnythingLLMコンテナ内の環境変数です。`STORAGE_DIR`は`volumes`のマウント先と同じパスを指定する必須項目で、未設定だと起動直後にクラッシュします。`LLM_PROVIDER`や`EMBEDDING_ENGINE`を`ollama`にすることで、推論・Embeddingの両方をOllamaに向けます。 |
-| `ports`                   | `"3001:3001"`は`ホスト側:コンテナ側`の対応です。WSL2ディストリビューションの3001番ポートがWindows側に自動フォワードされるため（02章）、Windowsブラウザから`http://localhost:3001`で到達できます。                                                      |
-| `depends_on`              | `ollama`コンテナの**起動順**のみを保証します。Ollama内でモデルロードが完了しヘルスチェックが通った状態を待つわけではないので、起動直後にAnythingLLMからの疎通確認が失敗する場合は数秒待ってから再試行してください。                                  |
-| `volumes`（トップレベル） | `ollama_data`・`anythingllm_storage`という名前のnamed volumeをこのCompose project用に定義します。値を空にしているのは「Composeに新規作成させる」既定動作の指定です。                                                                                     |
+| 項目                        | 内容                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `image`                   | Docker Hub上の公式イメージをそのまま利用します。Dockerfileを自前で書く必要はありません。                                                                                                                                                                                                                                                                                                                               |
+| `environment`             | AnythingLLMコンテナ内の環境変数です。`STORAGE_DIR`は`volumes`のマウント先と同じパスを指定する必須項目で、未設定だと起動直後にクラッシュします。`LLM_PROVIDER`や`EMBEDDING_ENGINE`を`ollama`にすることで、推論・Embeddingの両方をOllamaに向けます。チャット用モデルは`OLLAMA_MODEL_PREF`、Embeddingモデルは`EMBEDDING_MODEL_PREF`でそれぞれ指定します（いずれも初期値で、後述の通りUI側で選び直せます）。 |
+| `ports`                   | `"3001:3001"`は`ホスト側:コンテナ側`の対応です。WSL2ディストリビューションの3001番ポートがWindows側に自動フォワードされるため（02章）、Windowsブラウザから`http://localhost:3001`で到達できます。                                                                                                                                                                                                                |
+| `depends_on`              | `ollama`コンテナの**起動順**のみを保証します。Ollama内でモデルロードが完了しヘルスチェックが通った状態を待つわけではないので、起動直後にAnythingLLMからの疎通確認が失敗する場合は数秒待ってから再試行してください。                                                                                                                                                                                            |
+| `volumes`（トップレベル） | `ollama_data`・`anythingllm_storage`という名前のnamed volumeをこのCompose project用に定義します。値を空にしているのは「Composeに新規作成させる」既定動作の指定です。                                                                                                                                                                                                                                               |
 
 ### volumesの実体はどこにあるか
 
@@ -245,6 +248,7 @@ docker compose exec ollama nvidia-smi
 
 - [ ] AnythingLLMとOllamaの役割分担（オーケストレーション vs 推論）を説明できる
 - [ ] `OLLAMA_BASE_PATH`にサービス名を指定する理由を説明できる
+- [ ] チャット用モデルは`OLLAMA_MODEL_PREF`、Embeddingモデルは`EMBEDDING_MODEL_PREF`で指定することを説明できる
 - [ ] WSL2でのGPU passthroughが`--gpus all`相当に限定される制約を説明できる
 - [ ] `anythingllm`の`(health: starting)`→`(healthy)`という表示が、`/api/ping`への定期的なHTTPチェックに基づくものであることを説明できる
 
