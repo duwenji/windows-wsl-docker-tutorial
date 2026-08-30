@@ -52,6 +52,72 @@ cat /etc/os-release
 
 Node.jsのバージョンが`devcontainer.json`で指定した`20`系であること、OSがコンテナのベースイメージ（Debian bookworm）であることを確認します。
 
+## Reopen in Containerで内部的に何が起きるか
+
+`Dev Containers: Reopen in Container`を実行すると、裏では次の処理が順に走ります。
+
+```mermaid
+sequenceDiagram
+    participant User as 開発者
+    participant VSCode as VS Code UI(Windows側)
+    participant Server as VS Codeサーバー(WSL側)
+    participant Docker as Docker Engine(WSL2内)
+    participant Container as コンテナ
+
+    User->>VSCode: コマンドパレットから実行
+    VSCode->>Server: .devcontainer/devcontainer.jsonを読む
+    Server->>Docker: イメージが無ければpull（初回のみ）
+    Server->>Docker: docker run相当で起動を指示<br/>(bind mount元=プロジェクトフォルダ, forwardPorts設定込み)
+    Docker->>Container: コンテナ起動<br/>(workspaceFolderにbind mount)
+    Server->>Container: コンテナ内にVS Codeサーバーをインストール・起動
+    Container->>Container: devcontainer.jsonのcustomizations.vscode.extensionsを<br/>コンテナ内に再インストール
+    Container-->>VSCode: 接続確立、ウィンドウが再読み込みされる
+    VSCode-->>User: 統合ターミナルがコンテナ内シェルに切り替わる
+```
+
+ポイントは、**VS Codeサーバーがもう一段ネストする**ことです。02章で説明した通り、Remote-WSL接続の時点で既にWSL側にVS Codeサーバーが1つ動いていますが、Reopen in Containerを実行すると**コンテナ内にさらに別のVS Codeサーバーが新規インストールされ**、UIの接続先がWSL側サーバーからコンテナ内サーバーへ切り替わります。拡張機能も、この時点で「コンテナ用」が改めてインストールされます（Windows用・WSL用とは別の3つ目のインストール先になります）。
+
+構成がどう変わるかを、実行前後で比較すると次のようになります。
+
+```mermaid
+flowchart TB
+    subgraph Before["Before: Remote-WSL接続のみ"]
+        direction TB
+        subgraph BWin["Windows ホスト"]
+            BUI["VS Code UI"]
+        end
+        subgraph BWSL["WSL2（Ubuntu）"]
+            BServer["VS Codeサーバー"]
+            BFS["~/projects/sample-dev"]
+        end
+        BUI <--> BServer
+        BServer --> BFS
+    end
+
+    subgraph After["After: Reopen in Container実行後"]
+        direction TB
+        subgraph AWin["Windows ホスト"]
+            AUI["VS Code UI"]
+        end
+        subgraph AWSL["WSL2（Ubuntu、Dockerホスト）"]
+            AFS["~/projects/sample-dev<br/>(bind mount元)"]
+            subgraph ADocker["Docker Engine"]
+                subgraph AContainer["コンテナ（node:20-bookworm）"]
+                    AServer["VS Codeサーバー<br/>（コンテナ内に新規インストール）"]
+                    AExt["拡張機能・言語サーバー<br/>（devcontainer.json指定分）"]
+                    AWorkspace["/workspace<br/>(bind mount先)"]
+                end
+            end
+        end
+        AUI <-->|"接続先が切り替わる"| AServer
+        AServer --> AExt
+        AServer --> AWorkspace
+        AFS -.->|"bind mount"| AWorkspace
+    end
+```
+
+Beforeでは「Windows UI ↔ WSL側サーバー」という1段の接続でしたが、Afterでは「Windows UI ↔ コンテナ内サーバー」に置き換わり、WSL自体は「Dockerホスト」としての役割に退きます。プロジェクトフォルダの実体（`~/projects/sample-dev`）はWSL側に残ったままで、コンテナの`/workspace`へbind mountされる、という点は変わりません（このbind mount元がWSL側パスかWindows側パスかで速度が変わる、というのが次節の内容です）。
+
 ## Remote-WSLとの関係
 
 Dev Containersは、bind mount元としてプロジェクトフォルダをそのままコンテナに接続します。前のレッスンで学んだ通り、**Remote-WSLでWSL内フォルダ（`~/projects/sample-dev`）を開いた状態からDev Containersを起動すると、bind mount元がWSL側パスになり、高速な経路で開発できます**。
@@ -87,6 +153,7 @@ flowchart TB
 
 - [ ] `devcontainer.json`の最小構成を作成できた
 - [ ] Dev Containersでコンテナ内開発環境を起動できた
+- [ ] Reopen in Container実行時にVS Codeサーバーの接続先がWSL側からコンテナ内へ切り替わる仕組みを説明できる
 - [ ] Remote-WSL経由で開くことの重要性を説明できる
 
 ## 次へ

@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- `05-dev-workflow-and-file-sharing/03-vscode-dev-containers.md` に「Reopen in Containerで内部的に何が起きるか」節を追加：起動処理の流れ（devcontainer.json読み込み→イメージpull→コンテナ起動→コンテナ内VS Codeサーバーのインストール→拡張機能再インストール→接続切り替え）をsequenceDiagramで、実行前後の構成変化（WSL側サーバー接続→コンテナ内サーバー接続への切り替わり、VS Codeサーバーが二重にネストする点）をflowchartで可視化。章末チェックリストに関連項目を1件追加
 - `02-environment-setup/03-vscode-remote-wsl.md` にmermaid図を追加：Remote-WSL拡張によるUI（Windows側）とVS Codeサーバー（WSL側）のクライアント/サーバー分離構造を可視化
 - `05-dev-workflow-and-file-sharing/03-vscode-dev-containers.md` にmermaid図を追加：Dev Containers起動時、直前に開いていたパス（WSL側 vs Windows側）によってbind mount元と性能が分岐する様子をflowchartで可視化
 - `10-local-rag-anythingllm-ollama/01-architecture-and-compose-setup.md` に「`anythingllm`のHEALTHCHECKは実際に何をチェックしているか」節を追加：`mintplexlabs/anythingllm`イメージのHEALTHCHECK命令（`--interval=1m --timeout=10s --start-period=1m`）と`docker-healthcheck.sh`が`/api/ping`へHTTPチェックしている実装を解説。章末チェックリストに関連項目を1件追加
