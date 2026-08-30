@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- `02-environment-setup/02-install-docker-engine.md` に「なぜ`apt install docker.io`ではなくこの手順なのか」節と、インストールコマンド各行の役割解説表を追加（GPG鍵の`dearmor`/`signed-by`の意味、アーキテクチャ・コードネームを動的取得する理由を含む）。章末チェックリストに関連項目を2件追加
 - `02-environment-setup/01-install-wsl.md` に「初回セットアップ後、なぜ2回目以降は何も聞かれないのか」節を追加：`/etc/wsl.conf`の`[user] default=`によるユーザー名の永続化、`wsl`起動が認証を伴わない単なるプロセス起動である理由、Windowsサインインが信頼境界として機能する仕組みを解説。章末チェックリストに関連項目を2件追加
 - `10-local-rag-anythingllm-ollama/04-container-runtime-internals.md`（発展）を追加：`dockerd`/`containerd`/`runc`の三層構造、`runc`が行うLinux syscallレベルの処理（namespaces/cgroups/pivot_root）、`nvidia-container-runtime`が`runc`をラップするシムである仕組みをmermaid図付きで解説。`01-architecture-and-compose-setup.md`のGPU passthrough節から参照リンクを追加、`03-rag-workspace-and-verification.md`の「次へ」を接続
 - 新章`10-local-rag-anythingllm-ollama`を追加（AnythingLLM + OllamaによるローカルRAG環境構築）

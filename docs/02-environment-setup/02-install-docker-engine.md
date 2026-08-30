@@ -38,6 +38,25 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plug
 
 `docker-compose-plugin` も同時に入れています。これにより06章で使う `docker compose`（ハイフンなしのサブコマンド形式）が使えるようになります。
 
+### なぜ`apt install docker.io`ではなくこの手順なのか
+
+Ubuntuの標準リポジトリにも`docker.io`という名前でDockerパッケージが存在しますが、本教材ではあえて使いません。標準リポジトリのバージョンはUbuntu側の検証・同期の都合でDocker公式のリリースより古くなりがちで、`docker-buildx-plugin`や`docker-compose-plugin`（`docker compose`のサブコマンド形式）が含まれていないことも多いためです。そこで上記の手順では、Docker社が配布する公式リポジトリを新たにaptへ登録し、そこから最新版をインストールしています。
+
+### 各コマンドが何をしているか
+
+| コマンド | 役割 |
+|---|---|
+| `apt-get install ca-certificates curl gnupg` | 後続の手順で使う3点セットを用意（HTTPS証明書検証・ダウンロード・GPG鍵の処理） |
+| `install -m 0755 -d /etc/apt/keyrings` | 信頼済みGPG鍵を置く専用ディレクトリを作成（`0755`＝apt実行時の非特権ユーザーからも読み取れる権限） |
+| `curl ... \| gpg --dearmor -o ...` | Docker公式のGPG公開鍵をダウンロードし、テキスト形式（ASCII armor）からapt用のバイナリ形式に変換して保存 |
+| `chmod a+r` | 鍵ファイルを全ユーザーが読める状態にする（aptは専用の低権限ユーザーでリポジトリ検証を行うため） |
+| `echo ... \| tee /etc/apt/sources.list.d/docker.list` | 「このリポジトリはこのGPG鍵（`signed-by=`）で署名されたパッケージだけを信頼する」という設定を新規のリポジトリ定義ファイルとして追加 |
+| 2回目の`apt-get update` | 直前に追加したDocker公式リポジトリの情報を読み込み直す（これをしないと新しいリポジトリの存在自体をaptがまだ認識していない） |
+
+`signed-by=/etc/apt/keyrings/docker.gpg`の部分は、「このリポジトリから取得したパッケージの署名は、このファイルの鍵で検証する」という指定です。GPG鍵とリポジトリ定義を1対1で明示的に紐付けることで、万一他のリポジトリ用に登録した別の鍵が誤って流用される事態を防いでいます。
+
+またリポジトリURL内の`$(dpkg --print-architecture)`（例: `amd64`）と`$(. /etc/os-release && echo "$VERSION_CODENAME")`（例: `jammy`）は、値をハードコードせず実行時のシステムから動的に取得しています。同じ手順書をどのアーキテクチャ・どのUbuntuバージョンでも使い回せるようにするための工夫です。
+
 ## dockerグループへの追加（sudoなしでdockerを使う）
 
 ```bash
@@ -121,6 +140,8 @@ This message shows that your installation appears to be working correctly.
 - [ ] `sudo`なしで`docker`コマンドが実行できる
 - [ ] WSL再起動後もDockerデーモンが自動起動する設定ができた
 - [ ] WSLで既定でsystemdが無効になっている理由を説明できる
+- [ ] `apt install docker.io`ではなくDocker公式リポジトリを使う理由を説明できる
+- [ ] `signed-by=`によるGPG鍵とリポジトリの紐付けの目的を説明できる
 
 ## 次へ
 
