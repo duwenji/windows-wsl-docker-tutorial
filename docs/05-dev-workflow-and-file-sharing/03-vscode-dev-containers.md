@@ -6,6 +6,7 @@
 
 ## 学習目標
 
+- Dev Containersを利用するメリットを説明できる
 - devcontainer.jsonの最小構成を作成できる
 - Dev Containersでコンテナ内開発を起動できる
 - Remote-WSLとの組み合わせで高速な開発ループを構築できる
@@ -15,6 +16,17 @@
 ## Dev Containersとは
 
 Dev Containersは、プロジェクトに`.devcontainer/devcontainer.json`を置くことで、VS Code自体をコンテナ内で動かし、拡張機能・ターミナル・デバッガまで含めてコンテナ内の環境で開発できるようにする仕組みです（02章でインストール済みの拡張機能を使用します）。
+
+## Dev Containersを利用するメリット
+
+- **環境の再現性・一貫性**: OS・ランタイムバージョン・インストール済みツールを`devcontainer.json`（必要なら`Dockerfile`）にコードとして記述できるため、「自分の環境では動くのに他の人では動かない」という問題を解消できる。リポジトリをクローンして`Reopen in Container`するだけで、チーム全員が同じ環境を再現できる
+- **ホスト環境を汚さない**: Node.jsやPython、DBクライアントなどをWindows/WSL側に直接インストールする必要がない。プロジェクトAは`node:18`、プロジェクトBは`node:20`のように、バージョン管理ツール（nvm等）なしで複数バージョンを共存させられる
+- **オンボーディングの高速化**: READMEのセットアップ手順を一つずつ実行する代わりに、クローンして`Reopen in Container`を叩くだけで開発を始められる
+- **拡張機能もプロジェクト単位で分離**: `devcontainer.json`の`customizations.vscode.extensions`で、そのプロジェクトに必要な拡張機能だけをコンテナ内にインストールできる。無関係な拡張機能が競合したり動作を阻害したりしない
+- **本番・CI環境に近づけられる**: ベースイメージをCI/本番と揃えれば、開発環境と本番環境の差分を減らせる
+- **WSL2 + Remote-WSLとの組み合わせ**: Remote-WSLでWSL側のネイティブファイルシステムを経由してからDev Containersを起動すれば、bind mountが高速な経路になり、開発ループを維持したまま上記すべてのメリットを得られる（詳細は本章「Remote-WSLとの関係」）
+
+トレードオフとして、初回のイメージpull・コンテナビルドに時間がかかる点、コンテナ内外の行き来（ホストのGitクレデンシャルやSSH鍵の共有など）に多少の設定が必要な点は留意してください。
 
 ## 最小構成のdevcontainer.json
 
@@ -151,6 +163,7 @@ flowchart TB
 
 ## 章末チェックリスト
 
+- [ ] Dev Containersを利用するメリットを説明できる
 - [ ] `devcontainer.json`の最小構成を作成できた
 - [ ] Dev Containersでコンテナ内開発環境を起動できた
 - [ ] Reopen in Container実行時にVS Codeサーバーの接続先がWSL側からコンテナ内へ切り替わる仕組みを説明できる
